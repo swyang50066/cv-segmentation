@@ -24,7 +24,7 @@ class GrowRegion(object):
         # Parameters
         self.threshold = threshold
 
-    def run(self, image, seed)
+    def run(self, image, seed):
         # Get input shape
         height, width = image.shape        
 
