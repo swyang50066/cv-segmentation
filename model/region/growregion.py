@@ -9,9 +9,8 @@ class GrowRegion(object):
     ----------------
     image: (H, W) ndarray
         Input image
-    seed: (N, 2) list of tuples
-        Seed positions used as initial growing seed points
-
+    seed: (H, W) ndarray
+        Input seed
     (optional) threshold: integer or float
         Treshold value for image segmentation
 
@@ -32,12 +31,12 @@ class GrowRegion(object):
         displi = [-1, -1, -1, 0, 0, 1, 1, 1]
         displj = [-1, 0, 1, -1, 1, -1, 0, 1]
 
-        # Initialize region domain with seed points
-        region = np.zeros_like(image)
-        region[tuple(seed)] = 1
+        # Initialize region domain
+        region = np.uint8(seed > 0)
 
         # Grow region 
-        query = deque(seed)
+        query = deque(np.argwhere(seed > 0))
+
         while len(query) > 0:
             # Pop current position
             i, j = query.popleft()
@@ -51,7 +50,7 @@ class GrowRegion(object):
                     continue
                 if jq == -1 or jq == width:
                     continue
-                if image[iq, jq] < self.threshold:
+                if image[iq, jq] <= self.threshold:
                     continue
                 if region[iq, jq] != 0:
                     continue
