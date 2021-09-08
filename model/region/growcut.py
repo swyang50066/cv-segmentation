@@ -64,7 +64,7 @@ class GrowCut(object):
                                image[np.newaxis, ...]])
 
         # Declare maps
-        nextState = state.copy()
+        nextState = currState.copy()
         currPrevent = np.ones_like(image)
 
         # Grow cut
@@ -82,13 +82,13 @@ class GrowCut(object):
                 window = self.openWindow((i, j), (height, width))
     
                 # Get cell feature
-                strength_p = state[1][i, j]
-                feature_p = state[2][i, j]
+                strength_p = currState[1][i, j]
+                feature_p = currState[2][i, j]
 
                 # Get neighbor features
-                label_q = state[0][window]
-                strength_q = state[1][window]
-                feature_q = state[2][window]
+                label_q = currState[0][window]
+                strength_q = currState[1][window]
+                feature_q = currState[2][window]
 
                 # Check valid attack
                 if not np.sum(strength_q): continue
@@ -117,7 +117,7 @@ class GrowCut(object):
 
                     nextState[0][i, j] = label_q[mask][0]
                     nextState[1][i, j] = (indicator*strength_q)[mask][0]
-
+                
             # Count the number of iteration
             if count > self.maxIter:
                 bRunning = False
@@ -132,4 +132,4 @@ class GrowCut(object):
             currState = nextState.copy()
             currPrevent = nextPrevent.copy()
 
-        return state[0]
+        return currState[0]
