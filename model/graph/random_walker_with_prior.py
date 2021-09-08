@@ -16,7 +16,7 @@ class RandomWalkerPriorModel(object):
     image: (H, W) or (H, W, C) ndarray
         input image (the third dimension is recognized as image channel)
     seed: (H, W) ndarray
-        seed map that includes serial number of label classes
+        seed map including seed points of label
 
     Returns
     ----------
