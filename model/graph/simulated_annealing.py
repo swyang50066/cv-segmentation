@@ -5,6 +5,7 @@ import  numpy    as  np
 
 from    skimage.measure     import  label
 
+
 def _getDisplacement(numNgb=4):
     ''' Return displacements of 'numNgb' neighbors
     '''
@@ -152,76 +153,3 @@ def simulatedAnnealing(img, lbl,
 
     return web
 
-
-def _readData(case):
-    bgr = cv2.imread(case).astype(np.uint8)
-
-    # Extract intensity, class map
-    #   'LA':1, 'LV':2, 'RA':3, 
-    #   'RV':4, 'Ao':5, 'LV Wall':6, 'myocardium':7
-    img = bgr[:, :, 0]
-    lbl = (1 * (bgr[:, :, 1] - bgr[:, :, 2] == 248).astype(np.uint8) +
-           2 * (bgr[:, :, 1] - bgr[:, :, 2] == 112).astype(np.uint8) +      
-           3 * (bgr[:, :, 1] - bgr[:, :, 2] == 32).astype(np.uint8) +      
-           4 * (bgr[:, :, 2] - bgr[:, :, 1] == 32).astype(np.uint8) +      
-           5 * (bgr[:, :, 2] - bgr[:, :, 1] == 112).astype(np.uint8) +      
-           6 * (bgr[:, :, 2] - bgr[:, :, 1] == 248).astype(np.uint8))       
-    myo = ((bgr[:, :, 0] > 0) & 
-           (bgr[:, :, 1] - bgr[:, :, 2] != 248) & 
-           (bgr[:, :, 1] - bgr[:, :, 2] != 112) & 
-           (bgr[:, :, 1] - bgr[:, :, 2] != 32) & 
-           (bgr[:, :, 2] - bgr[:, :, 1] != 32) & 
-           (bgr[:, :, 2] - bgr[:, :, 1] != 112) & 
-           (bgr[:, :, 2] - bgr[:, :, 1] != 248)).astype(np.uint8)
-   
-    # Detect central cardiac area 
-    bg    = label((myo > 0).astype(np.uint8), connectivity=1)
-    area  = [np.sum(bg == i+1) for i in range(bg.max())]
-    lbl  += 7 * (bg == np.argsort(area)[::-1][0]+1).astype(np.uint8)
-
-    binary = (lbl > 0).astype(np.uint8)
-    contours, _  = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-
-    # Fill holes
-    for contour in contours:
-        x = np.zeros_like(binary)
-        cv2.fillPoly(x, pts=[contour], color=[1,1,1])
-        lbl += 7 * ((lbl == 0) & (x > 0)).astype(np.uint8)
-
-
-    return img, lbl
-
-
-def _saveData(img, lbl):
-    result = np.zeros((512, 512, 3))
-    #result[:, :, :] = np.expand_dims(img, axis=-1)  
- 
-    # Mark labels
-    for x, y in np.argwhere(lbl == 1):
-        result[x, y, 1], result[x, y, 2] = 255, 7
-    for x, y in np.argwhere(lbl == 2):
-        result[x, y, 1], result[x, y, 2] = 127, 15
-    for x, y in np.argwhere(lbl == 3):
-        result[x, y, 1], result[x, y, 2] = 63, 31
-    for x, y in np.argwhere(lbl == 4):
-        result[x, y, 1], result[x, y, 2] = 31, 63
-    for x, y in np.argwhere(lbl == 5):
-        result[x, y, 1], result[x, y, 2] = 15, 127
-    for x, y in np.argwhere(lbl == 6):
-        result[x, y, 1], result[x, y, 2] = 7, 255
-    for x, y in np.argwhere(lbl == 7):
-        result[x, y, 1], result[x, y, 2] = 93, 10
-
-    cv2.imwrite('./result.bmp', result)
-
-
-if __name__=='__main__':
-    # Read data
-    case = './sample3.bmp'
-    img, lbl = _readData(case)
-
-    # Run markov-random-walk
-    #lbl = simulatedAnnealing(img, lbl)
-
-    # Save data
-    _saveData(img, lbl)
