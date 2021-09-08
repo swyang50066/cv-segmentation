@@ -15,11 +15,12 @@ class GrowCut(object):
     ----------------
     image: (H, W) ndarray
         Input image.
-    state: (2, H, W) ndarray
-        Initial state, which stores (foreground/background, strength in order) 
-        for each pixel position or automaton. The strength represents the
-        certainty of the state (e.g., 1 is a hard seed value that remains
-        constant throughout segmentation).
+    seed: (H, W) ndarray
+        Input seed.
+    state: (3, H, W) ndarray
+        Initial state contains (label, strength, and feature) in the order. 
+        The strength represents the certainty of the state, for example 
+        '1' is a hard seed value that remains constant throughout segmentation.
     (optional) maxIter: integer
         The maximum number of automata iterations to allow.
     (optional) windowSize : integer
@@ -57,7 +58,7 @@ class GrowCut(object):
         # Get input shape
         height, width = image.shape
 
-        # Build state map
+        # Build state container
         currState = np.vstack([seed[np.newaxis, ...],
                                1.*(seed > 0)[np.newaxis, ...],
                                image[np.newaxis, ...]])
