@@ -2,7 +2,7 @@ import  numpy       as  np
 import  maxflow
 
     
-def funcGradientIndicator(x, alpha=2.):
+def _funcGradientIndicator(x, alpha=2.):
     ''' Return gradient indicator
     '''
     return 1/(1 + x**alpha)
@@ -43,7 +43,7 @@ class GraphCut(object):
         # Evaluate gradient of features
         grads = np.hstack([np.diff(image, axis=ax).ravel() 
                            for ax in [0, 1]])
-        grads = funcGradientIndicator(grads)
+        grads = _funcGradientIndicator(grads)
 
         # Update edge weight
         for (i, j), grad in zip(edges.T, grads):

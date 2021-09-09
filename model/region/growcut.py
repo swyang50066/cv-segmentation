@@ -2,7 +2,7 @@ import  numpy       as  np
 from    scipy.ndimage   import  distance_transform_edt      as  dist
 
     
-def funcStrengthReduction(p, q, norm=255):
+def _funcStrengthReduction(p, q, norm=255):
     ''' Return strength reduction term 
     '''
     return 1 - np.sqrt((p - q)**2.)/np.sqrt(norm**2.)
@@ -94,7 +94,7 @@ class GrowCut(object):
                 if not np.sum(strength_q): continue
 
                 # Calculate strength reduction factor
-                indicator = funcStrengthReduction(feature_p, feature_q)
+                indicator = _funcStrengthReduction(feature_p, feature_q)
                 
                 # Update cell state by valid attacks
                 '''
