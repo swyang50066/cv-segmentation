@@ -4,6 +4,40 @@ import  numpy           as  np
 from    scipy.ndimage   import  binary_erosion, binary_dilation
 
 
+def _optSupInf(u):
+    ''' SI operator
+    '''
+    if np.ndim(u) == 2:
+        kernels = self.kernel2d
+    elif np.ndim(u) == 3:
+        kernels = self.kernel3d
+    else:
+        raise ValueError("'u' has an invalid number of dimensions")
+
+    # Get erosion operators
+    erosions = [binary_erosion(u, kernel).astype(np.int8)
+                for kernel in kernels]
+
+    return np.stack(erosions, axis=0).max(0)
+
+
+def _optInfSup(u):
+    ''' IS operator
+    '''
+    if np.ndim(u) == 2:
+        kernels = self.kernel2d
+    elif np.ndim(u) == 3:
+        kernels = self.kernel3d
+    else:
+        raise ValueError("'u' has an invalid number of dimensions")
+
+    # Get dilation operators
+    dilations = [binary_dilation(u, kernel).astype(np.int8)
+                 for kernel in kernels]
+
+    return np.stack(dilations, axis=0).min(0)
+
+
 class Operator(object):
     def __init__(self, iterable):
         """ Call functions from the iterable each time it is called.
@@ -71,36 +105,6 @@ class MorphChanVese(object):
         self.kernel3d[7][[0, 1, 2], [0, 1, 2], :] = 1
         self.kernel3d[8][[0, 1, 2], [2, 1, 0], :] = 1
 
-    def optSupInf(self, u):
-        ''' SI operator
-        '''
-        if np.ndim(u) == 2:
-            kernels = self.kernel2d
-        elif np.ndim(u) == 3:
-            kernels = self.kernel3d
-        else:
-            raise ValueError("'u' has an invalid number of dimensions")
-
-        erosions = [binary_erosion(u, kernel).astype(np.int8)
-                    for kernel in kernels]
-
-        return np.stack(erosions, axis=0).max(0)
-
-    def optInfSup(self, u):
-        ''' IS operator
-        '''
-        if np.ndim(u) == 2:
-            kernels = self.kernel2d
-        elif np.ndim(u) == 3:
-            kernels = self.kernel3d
-        else:
-            raise ValueError("'u' has an invalid number of dimensions")
-
-        dilations = [binary_dilation(u, kernel).astype(np.int8)
-                     for kernel in kernels]
-
-        return np.stack(dilations, axis=0).min(0)
-
     def run(self, image, seed, eta=1.e-8):
         # Initialize level-set
         phi = np.zeros_like(seed, dtype=np.int16)
@@ -110,8 +114,8 @@ class MorphChanVese(object):
         region = np.int8(phi > 0)
 
         # Declare curvature operator
-        curvop = Operator([lambda u: self.optSupInf(self.optInfSup(u)),   # SIoIS
-                           lambda u: self.optInfSup(self.optSupInf(u))])  # ISoSI
+        curvop = Operator([lambda u: _optSupInf(_optInfSup(u)),   # SIoIS
+                           lambda u: _optInfSup(_optSupInf(u))])  # ISoSI
 
         for _ in range(self.maxIter):
             # Evaluate area strengths
