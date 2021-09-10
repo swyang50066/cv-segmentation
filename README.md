@@ -9,10 +9,10 @@ This repository includes diverse algorithmic method of model-based medical image
 	* Grow-Cut (included)
 * **Active Contour**
 	* Snake Model (included)
-	* Gradient Vector Flow (maintenance)
+	* Gradient Vector Flow (included)
 * **Level-Set**
 	* Level-set Method (included)
-	* Chan-Vese Model (included)
+	* Chan-Vese Model (maintained)
 	* Morphological Chan-Vese Model (included)
 	* Region Scalable Fitting Method (RSF) (maintenance)
 	* Distance Regularized Level Set Evolution (DRLSE) (maintenance)
@@ -20,12 +20,12 @@ This repository includes diverse algorithmic method of model-based medical image
 * **Graph-Based**
 	* Graph-Cut (included)
 	* Simulated Annealing Method (included)
-	* Markov Random Field (included)
-	* Conditional Random Field (maintenance)
-	* Power Watershed Random Field (maintenance)
+	* Random Walker with Prior Model (included)
+	* Conditional Random Field (to be updated)
+	* Power Watershed Random Field (to be updated)
 * **Clustering**
-	* Gaussian Mixture Model (included)
-	* Taboggan/Superpixel Clustering (included)
+	* Gaussian Mixture Model (maintained)
+	* Taboggan/Superpixel Clustering (maintained)
 
 Currently, some methods are stiil in maintenance 
 
