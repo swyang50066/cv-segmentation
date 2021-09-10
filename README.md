@@ -9,7 +9,7 @@ This repository includes diverse algorithmic method of model-based medical image
 	* Grow-Cut (included)
 * **Active Contour**
 	* Snake Model (included)
-	* Gradient Vector Field (maintenance)
+	* Gradient Vector Flow (maintenance)
 * **Level-Set**
 	* Level-set Method (included)
 	* Chan-Vese Model (included)
