@@ -12,70 +12,57 @@ from    contour     import  getContour
 ## Sobel kernels
 # Here, we are going to use image coordinates matching
 # array coordinates like (x:height, y:width)
-SOBEL_X = .125*np.array([[ 1.,  2.,  1.],
+SOBEL_X = np.array([[ 1.,  2.,  1.],
                          [ 0.,  0.,  0.],
                          [-1., -2., -1.]])
-SOBEL_Y = .125*np.array([[ 1.,  0., -1.],
+SOBEL_Y = np.array([[ 1.,  0., -1.],
                          [ 2.,  0., -2.],
                          [ 1.,  0., -1.]])
 
 
-def _calcEdgeEnergy(u):
-    ''' Return image edge energy by using Sobel operator
-    '''
-    # Extract image edges with Sobel filter
-    gradx = convolve(u, SOBEL_X, mode="nearest")
-    grady = convolve(u, SOBEL_Y, mode="nearest")
+# Laplacian kernel
+LAPLACIAN = np.array([[0.,  1., 0.],
+                      [1., -4., 1.],
+                      [0.,  1., 0.]])
 
+
+def _calcLaplacian(x):
+    ''' Apply Laplacian operator 
     '''
+    return convolve(x, LAPLACIAN, mode="nearest")
+
+
+def _calcGradient(x):
+    ''' Return gradient map
+    '''
+    ## Apply gaussian filter
+    #x = gaussian_filter(x, sigma=1)
+    
     # Pad input domain
-    pad = np.pad(u, pad_width=1, mode="edge")
-   
+    pad = np.pad(x, pad_width=1, mode="edge")
+
     # Calculate derivatives
-    fx = .5*(pad[2:, 1:-1] - pad[:-2, 1:-1])
-    fy = .5*(pad[1:-1, 2:] - pad[1:-1, :-2])
+    gradx = .5*(pad[2:, 1:-1] - pad[:-2, 1:-1])
+    grady = .5*(pad[1:-1, 2:] - pad[1:-1, :-2])
 
-    return -(fx**2. + fy**2.)
-    '''
-    return (gradx**2. + grady**2.)
+    return (gradx, grady)
 
 
-def _calcScaleEnergy(u, sigma=3):
-    ''' Return image scale energy
+def _getEdgeMap(u, sigma=2):
+    ''' Return image edge map by  using Sobel operator
     '''
     # Apply gaussian filter
     u = gaussian_filter(u, sigma=sigma)
+    
+    # Extract image edges with Sobel filter
+    fx = convolve(u, SOBEL_X, mode="nearest")
+    fy = convolve(u, SOBEL_Y, mode="nearest")
 
-    # Pad input domain
-    pad = np.pad(u, pad_width=1, mode="edge")
-
-    # Calculate derivatives
-    fxx = pad[2:, 1:-1] - 2.*u + pad[:-2, 1:-1]
-    fyy = pad[1:-1, 2:] - 2.*u + pad[1:-1, :-2]
-
-    return -(fxx**2. + fyy**2.)
+    return np.sqrt(.5*(fx**2. +  fy**2.))
 
 
-def _calcCurvatureEnergy(u, eta=1.e-8):
-    ''' Return curvature energy
-    '''
-    # Pad input domain
-    pad = np.pad(u, pad_width=1, mode="edge")
-   
-    # Calculate derivatives
-    fx = .5*(pad[2:, 1:-1] - pad[:-2, 1:-1])
-    fy = .5*(pad[1:-1, 2:] - pad[1:-1, :-2])
-    fxx = pad[2:, 1:-1] - 2.*u + pad[:-2, 1:-1]
-    fyy = pad[1:-1, 2:] - 2.*u + pad[1:-1, :-2]
-    fxy = .25*(pad[2:, 2:]  + pad[:-2, :-2]
-               - pad[:-2, 2:] - pad[2:, :-2])
-
-    return ((fxx*fy**2 - 2*fxy*fx*fy + fyy*fx**2)
-            / (np.power(fx**2. + fy**2., 1.5) + eta))
-
-
-class Snake(object):
-    ''' Snake Algotirhm of Active-Contour Based Image Segmentation
+class GVFSnake(object):
+    ''' Gradient vector flow based snake evolution for image segmentation
 
     Parameters
     ----------------
@@ -90,7 +77,6 @@ class Snake(object):
         segmentation label
     '''
     def __init__(self, alpha=.01, beta=.1, gamma=.01, 
-                       wline=0., wedge=1., wscale=0., wcurv=0.,
                        maxIter=1000,
                        maxDispl=1.,
                        eps=.1,
@@ -99,12 +85,6 @@ class Snake(object):
         self.alpha = alpha    # continuity parameter
         self.beta = beta      # smoothness parameter
         self.gamma = gamma    # artificial time step
-
-        # Contraint weights
-        self.wline = wline    # weight of line functional
-        self.wedge = wedge    # weight of edge functional
-        self.wscale = wscale    # weight of scale functional
-        self.wcurv = wcurv    # weight of curvature funtional
 
         # Numerical parameters
         self.maxIter = int(maxIter)
@@ -115,6 +95,33 @@ class Snake(object):
         self.period = period
         self.xhistory = [0] * period    # container of snake energies for evolution
         self.yhistory = [0] * period    
+
+    def getGradientVectorFlow(self, fx, fy, CLF=.25, mu=1., dx=1., dy=1., maxIter=1000, eps=1.e-6):
+        ''' Return gradient vector flow
+        '''
+        # Set artificial time step under CFL restriction
+        dt = CLF*dx*dy/mu
+        
+        # Set coefficients
+        b = fx**2. + fy**2.
+        c1, c2 = b*fx, b*fy
+    
+        # Optimize gradient vector flow
+        currGVF = (fx, fy)    # initially set the vector flow to be gradient of edge map
+        for i in range(maxIter):
+            # Evolve flow
+            nextGVF = ((1. - b*dt)*currGVF[0] + CLF*_calcLaplacian(currGVF[0]) + c1*dt,
+                       (1. - b*dt)*currGVF[1] + CLF*_calcLaplacian(currGVF[1]) + c2*dt)
+            
+            # Update flow
+            delta = np.sqrt((currGVF[0] - nextGVF[0])**2. 
+                            + (currGVF[1] - nextGVF[1])**2.)
+            if np.mean(delta) < eps:
+                break
+            else:
+                currGVF = nextGVF
+    
+        return currGVF
 
     def run(self, image, seed):
         # Convert input image format to be a float container
@@ -144,19 +151,23 @@ class Snake(object):
             self.yhistory[p] = np.zeros(len(snake), dtype=np.float32)
 
         # Evaluate image energies
-        Eedge = _calcEdgeEnergy(image)
-        Escale = _calcScaleEnergy(image)
-        Ecurv = _calcCurvatureEnergy(image)
+        edge = _getEdgeMap(image)
 
-        # Get total image energy
-        Etot = (self.wline*image + self.wedge*Eedge
-                + self.wscale*Escale + self.wcurv*Ecurv)
-            
-        # Get continuous image field
-        interp = RectBivariateSpline(np.arange(height), 
-                                     np.arange(width),
-                                     Etot,
-                                     kx=2, ky=2, s=0)
+        # Evaluate gradient of edge map
+        gradx, grady = _calcGradient(edge)
+    
+        # Get gradient vector flow (i.e., GVF)
+        GVF = self.getGradientVectorFlow(gradx, grady)
+
+        # Get continous GVF
+        xinterp = RectBivariateSpline(np.arange(height),
+                                      np.arange(width),
+                                      GVF[0],
+                                      kx=2, ky=2, s=0)
+        yinterp = RectBivariateSpline(np.arange(height),
+                                      np.arange(width),
+                                      GVF[1],
+                                      kx=2, ky=2, s=0)
 
         # Build snake shape matrix
         matrix = np.eye(len(snake), dtype=float)
@@ -176,8 +187,8 @@ class Snake(object):
         # Do optimization
         for step in range(self.maxIter):
             # Get point-wise energy values
-            fx = interp(xx, yy, dx=1, grid=False).astype(np.float32)
-            fy = interp(xx, yy, dy=1, grid=False).astype(np.float32)
+            fx = xinterp(xx, yy, grid=False).astype(np.float32)
+            fy = yinterp(xx, yy, grid=False).astype(np.float32)
 
             # Evaluate new snake
             xn = inv @ (self.gamma*xx + fx)
@@ -197,11 +208,12 @@ class Snake(object):
                 self.xhistory[index] = xx
                 self.yhistory[index] = yy
             else:
-                distance = np.min(np.max(np.abs(np.array(self.xhistory) - xx)
-                                         + np.abs(np.array(self.yhistory) - yy), axis=1))
-                if distance < self.eps: break
+                delta = np.max(np.abs(np.array(self.xhistory) - xx)
+                               + np.abs(np.array(self.yhistory) - yy), axis=1)
+                if np.min(delta) < self.eps: 
+                    break
 
         # Remark region of snake contour into pixel map
         seed = cv2.fillConvexPoly(seed, points=snake.astype(np.int), color=1)
-
+        
         return seed, np.stack([xx, yy], axis=1)
