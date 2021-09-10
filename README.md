@@ -24,7 +24,7 @@ This repository includes diverse algorithmic method of model-based medical image
 	* Conditional Random Field (to be updated)
 	* Power Watershed Random Field (to be updated)
 * **Clustering**
-	* Gaussian Mixture Model (maintained)
+	* Gaussian Mixture Model (included)
 	* Taboggan/Superpixel Clustering (maintained)
 
 Currently, some methods are stiil in maintenance 
