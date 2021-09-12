@@ -5,38 +5,38 @@
 This repository includes diverse algorithmic method of model-based medical image segmentation. The terminology of `model-based` means one which is hypothesized and parameterized model, so it is a bit free from the requirement of plenty of labeling data (the counter example is usually called data-driven method). The below list describes the classification of model-based method and the representative models belonging to it. 
 
 * **Region-Based**
-	* Region Growing (included)
-	* Grow-Cut (included)
+	* Region Growing (*included*)
+	* Grow-Cut (*included*)
 * **Active Contour**
-	* Snake Model (included)
-	* Gradient Vector Flow (included)
+	* Snake Model (*included*)
+	* Gradient Vector Flow (*included*)
 * **Level-Set**
-	* Level-set Method (included)
+	* Level-set Method (*included*)
 	* Chan-Vese Model (maintained)
-	* Morphological Chan-Vese Model (included)
+	* Morphological Chan-Vese Model (*included*)
 	* Region Scalable Fitting Method (RSF) (maintenance)
 	* Distance Regularized Level Set Evolution (DRLSE) (maintenance)
 	* Kullback-Leibler-Based Level-set Method (to be updated)
 * **Graph-Based**
 	* Graph-Cut (included)
-	* Simulated Annealing Method (included)
-	* Random Walker with Prior Model (included)
+	* Simulated Annealing Method (*included*)
+	* Random Walker with Prior Model (*included*)
 	* Conditional Random Field (to be updated)
 	* Power Watershed Random Field (to be updated)
 * **Clustering**
-	* Gaussian Mixture Model (included)
-	* Taboggan/Superpixel Clustering (maintained)
+	* Gaussian Mixture Model (*included*)
+	* Taboggan/Superpixel Clustering (*included*)
 
 Currently, some methods are stiil in maintenance 
 
 ## Installation
-To be updated (21.09.06)
+***To be updated***
 
 ## Usage
-To be updated (21.09.06)
+***To be updated***
 
 ## Contribution
-To be updated (21.09.06)
+***To be updated***
 
 ## Requirements
  All codes have developed in python and tested with `python>=3.6.0` environment (but, it stably supports functions with `python==3.8.0`). Numerical schemes (e.g., matrix operation, linear algebra, graph algorithm, ... etc.) used in the models is designed with  `numpy` and `scipy` modules for efficient computing. 
@@ -52,8 +52,8 @@ To be updated (21.09.06)
  }
 ```
 
-## CAVEATS
-
+## CAVEAT
+***To be announced***
 
 ## References
 [[1]](http://iacl.ece.jhu.edu/pubs/p087c.pdf) *C. Xu and J.L. Prince, "Gradient Vector Flow: A New External Force for Snakes," Proc. IEEE Conf. on Comp. Vis. Patt. Recog. (CVPR), Los Alamitos: Comp. Soc. Press, pp. 66–71, June 1997*
