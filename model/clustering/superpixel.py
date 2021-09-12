@@ -24,7 +24,7 @@ FANCE = np.array([[True, True,  True],
 def _getEdgeMap(u, sigma=2):
     ''' Return image edge map by  using Sobel operator
     '''
-    # Extract image edges with Sobel filter
+    # Extract image pairs with Sobel filter
     fx = convolve(u, SOBEL_X, mode="nearest")
     fy = convolve(u, SOBEL_Y, mode="nearest")
 
@@ -99,44 +99,84 @@ def toboggan(x):
     return mark
 
 
-def superpixel(img, lbl, 
-               sigma=0, numCls=1.e5, eps=1.e-30):
-    """ Return components of image graph based on superpixel segmentation
-    """
-    # Generate superpixel with 'SLIC' algorithm
-    mark = toboggan(img)
-    _, mark = np.unique(mark, return_inverse=True)
-    mark = mark.reshape(512, 512)
+class Superpixel(object):
+    ''' Superpixel algorithm of image segmentation
+        This function regions fragments of image domain 
+        generated from clustering algorithm (e.g., toboggan, slic). 
 
-    # Pre-build graph conponent
-    classes = np.unique(mark) 
-    nodes = np.array([np.mean(img[mark == cls]) for cls in classes])
-   
-    ctr  = np.array([np.mean(np.nonzero(mark == cls), axis=1) for cls in classes]) 
-
-    right = np.vstack([mark[:-1, :].ravel(), mark[1:, :].ravel()])
-    down  = np.vstack([mark[:, :-1].ravel(), mark[:, 1:].ravel()])
-    edges = np.unique(np.hstack([right, down]), axis=1)
-    edges = edges[:, edges[0, :] != edges[1, :]]
-    edges = np.unique(np.sort(edges, axis=0), axis=1)
+    Parameters
+    ----------------
+    image: (H, W) ndarray
+        input image.
     
-    # Merge analogous neighboring sites
-    merge = -np.ones_like(mark)
-    for i, j in edges.T:
-        if np.abs(nodes[i] - nodes[j]) < sigma:
-            nodes[i], nodes[j] = (np.mean(img[(mark == i) | (mark == j)]), 
-                                  np.mean(img[(mark == i) | (mark == j)]))
+    Returns
+    ----------------
+    region (H, W) ndarray
+        segmentation label
+    '''
+    def __init__(self, method="toboggan", sigma=16):
+        # Model parameter
+        self.sigma = sigma
+    
+        self.method = method
 
-            if merge[mark == i][0] != -1 and merge[mark == j][0] != -1:
-                merge[merge == j] = merge[mark == i][0]
-            elif merge[mark == i][0] != -1 and merge[mark == j][0] == -1:
-                merge[mark == j] = merge[mark == i][0]
-            elif merge[mark == i][0] == -1 and merge[mark == j][0] == -1:
-                merge[(mark == i) | (mark == j)] = i
-    merge[merge == -1] = mark[merge == -1]   
-    _, merge = np.unique(merge, return_inverse=True)
-    merge = merge.reshape(512, 512)
+    def run(self, image):
+        # Get input shape
+        height, width = image.shape
+        
+        # Cluster image domain
+        if self.method == "toboggan":
+            # Apply toboggan algorithm
+            fragment = toboggan(image)
 
-    return mark
+            # Extract fragment classes
+            _, fragment = np.unique(fragment, return_inverse=True)
+            fragment = fragment.reshape(height, width)
+            classes = np.unique(fragment)
+        elif self.method == "slic":
+            return 0
+        else:
+            raise ValueError("Wrong Clustering Method IS ENCOUNTERED!")
+
+        # Pre-build graph nodes
+        nodes = np.array([np.mean(image[fragment == cls]) for cls in classes])
+  
+        # Find adjacent fragment pairs 
+        left2right = np.vstack([fragment[:-1, :].ravel(), 
+                                fragment[1:, :].ravel()])
+        top2bottom = np.vstack([fragment[:, :-1].ravel(), 
+                                fragment[:, 1:].ravel()])
+        
+        pairs = np.unique(np.hstack([left2right, top2bottom]), axis=1)
+        pairs = pairs[:, pairs[0, :] != pairs[1, :]]
+        pairs = np.unique(np.sort(pairs, axis=0), axis=1)
+   
+        # Merge same-kind adjacet fragments
+        region = -np.ones_like(fragment)
+        for i, j in pairs.T:
+            if np.abs(nodes[i] - nodes[j]) < self.sigma:
+                # Get merged region
+                merge = image[np.logical_or(fragment == i, fragment == j)]
+                
+                # Change node property with merged region thing
+                nodes[i], nodes[j] = (np.mean(merge), np.mean(merge)) 
+
+                # Merge fragment pair to be an identical region
+                if (region[fragment == i][0] != -1 and 
+                    region[fragment == j][0] != -1):
+                    region[fragment == i] = region[fragment == j][0]
+                elif (region[fragment == i][0] != -1 and 
+                      region[fragment == j][0] == -1):
+                    region[fragment == j] = region[fragment == i][0]
+                elif (region[fragment == i][0] == -1 and 
+                      region[fragment == j][0] == -1):
+                    region[(fragment == i) | (fragment == j)] = i
+       
+        # Remark unmerged fragments
+        region[region == -1] = fragment[region == -1]   
+        _, region = np.unique(region, return_inverse=True)
+        region = region.reshape(height, width)
+
+        return region
 
 
