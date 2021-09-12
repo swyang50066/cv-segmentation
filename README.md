@@ -22,7 +22,7 @@ This repository includes diverse algorithmic method of model-based medical image
 	* Simulated Annealing Method 
 	* Random Walker with Prior Model 
 	* Conditional Random Field ***to be updated***)
-	* Power Watershed Random Field (***o be updated***)
+	* Power Watershed Random Field (***to be updated***)
 * **Clustering**
 	* Gaussian Mixture Model 
 	* Taboggan/Superpixel Clustering 
