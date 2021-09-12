@@ -5,27 +5,27 @@
 This repository includes diverse algorithmic method of model-based medical image segmentation. The terminology of `model-based` means one which is hypothesized and parameterized model, so it is a bit free from the requirement of plenty of labeling data (the counter example is usually called data-driven method). The below list describes the classification of model-based method and the representative models belonging to it. 
 
 * **Region-Based**
-	* Region Growing (*included*)
-	* Grow-Cut (*included*)
+	* Region Growing
+	* Grow-Cut
 * **Active Contour**
-	* Snake Model (*included*)
-	* Gradient Vector Flow (*included*)
+	* Snake Model 
+	* Gradient Vector Flow 
 * **Level-Set**
-	* Level-set Method (*included*)
-	* Chan-Vese Model (maintained)
-	* Morphological Chan-Vese Model (*included*)
-	* Region Scalable Fitting Method (RSF) (maintenance)
-	* Distance Regularized Level Set Evolution (DRLSE) (maintenance)
-	* Kullback-Leibler-Based Level-set Method (to be updated)
+	* Level-set Method 
+	* Chan-Vese Model (***to be updated***)
+	* Morphological Chan-Vese Model 
+	* Region Scalable Fitting Method (RSF) (***to be updated***)
+	* Distance Regularized Level Set Evolution (DRLSE) (***to be updated***)
+	* Kullback-Leibler-Based Level-set Method (***to be updated***)
 * **Graph-Based**
-	* Graph-Cut (included)
-	* Simulated Annealing Method (*included*)
-	* Random Walker with Prior Model (*included*)
-	* Conditional Random Field (to be updated)
-	* Power Watershed Random Field (to be updated)
+	* Graph-Cut 
+	* Simulated Annealing Method 
+	* Random Walker with Prior Model 
+	* Conditional Random Field ***to be updated***)
+	* Power Watershed Random Field (***o be updated***)
 * **Clustering**
-	* Gaussian Mixture Model (*included*)
-	* Taboggan/Superpixel Clustering (*included*)
+	* Gaussian Mixture Model 
+	* Taboggan/Superpixel Clustering 
 
 Currently, some methods are stiil in maintenance 
 
