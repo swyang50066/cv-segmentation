@@ -21,7 +21,6 @@ This repository includes diverse algorithmic method of model-based medical image
 	* Graph-Cut 
 	* Simulated Annealing Method 
 	* Random Walker with Prior Model 
-	* Conditional Random Field (***to be updated***)
 	* Power Watershed Random Field (***to be updated***)
 * **Clustering**
 	* Gaussian Mixture Model 
