@@ -29,7 +29,11 @@ This repository includes diverse algorithmic method of model-based medical image
 Currently, some methods are stiil in maintenance 
 
 ## Installation
-***To be updated***
+You can simply use functions in this repository by cloning repository or using below command in your kernel shell
+
+~~~
+{user}@{work-node}: {workplace}$ sudo pip install git+https://github.com/swyang50066/segmentation.git 
+~~~
 
 ## Usage
 ***To be updated***
