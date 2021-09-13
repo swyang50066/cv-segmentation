@@ -81,7 +81,7 @@ class RSF(object):
                        threshold=0.):
         # Model parameter
         self.mu = mu
-        self.nu = nu*255.*255.
+        self.nu = nu
         self.lambda1 = lambda1
         self.lambda2 = lambda2
 
