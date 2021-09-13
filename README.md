@@ -52,14 +52,14 @@ or using below command.
  
 ```
  requirements={
- "python>=3.6.0",
- "opencv-python>3.4.0",
- "numpy>=1.18.0",
- "scipy>=1.1.0",
- "scikit-learn>=0.20.0",
- "scikit-build>=0.12.0",
- "opencv-python>3.4.0",
- "PyMaxFlow>=1.2.0",
+ 	"python>=3.6.0",
+ 	"opencv-python>3.4.0",
+ 	"numpy>=1.18.0",
+ 	"scipy>=1.1.0",
+ 	"scikit-learn>=0.20.0",
+ 	"scikit-build>=0.12.0",
+ 	"opencv-python>3.4.0",
+ 	"PyMaxFlow>=1.2.0",
  }
 ```
 
