@@ -35,7 +35,7 @@ You can simply use functions in this repository by cloning repository,
 {user}@{work-node}: {workplace}$ git clone https://github.com/swyang50066/segmentation.git
 ~~~
 
-or using below command in your kernel shell
+or using below command.
 
 ~~~
 {user}@{work-node}: {workplace}$ sudo pip install git+https://github.com/swyang50066/segmentation.git 
