@@ -48,7 +48,7 @@ You can simply use functions in this repository by cloning repository or using b
  requirements={
  "python>=3.6.0",
  "opencv-python>3.4.0",
- "numpy>=1.2.0",
+ "numpy>=1.18.0",
  "scipy>=1.1.0",
  "scikit-learn>=0.20.0",
  "maxflow"
