@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 packages = find_packages(include=["model", "model.*"])
 requirements = [
-    "python>-3.6.0",
+    "python>=3.6.0",
     "numpy>=1.18.0",
     "scipy>=1.1.0",
     "scikit-learn>=0.20.0",
