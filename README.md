@@ -12,10 +12,10 @@ This repository includes diverse algorithmic method of model-based medical image
 	* Gradient Vector Flow 
 * **Level-Set**
 	* Level-set Method 
-	* Chan-Vese Model (***to be updated***)
+	* Chan-Vese Model 
 	* Morphological Chan-Vese Model 
-	* Region Scalable Fitting Method (RSF) (***to be updated***)
-	* Distance Regularized Level Set Evolution (DRLSE) (***to be updated***)
+	* Region Scalable Fitting Method (RSF)
+	* Distance Regularized Level Set Evolution (DRLSE) (***maintenance***)
 	* Kullback-Leibler-Based Level-set Method (***to be updated***)
 * **Graph-Based**
 	* Graph-Cut 
