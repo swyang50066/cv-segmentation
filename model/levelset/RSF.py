@@ -1,5 +1,10 @@
+import  sys
+sys.path.append("../../utils")
+
 import  numpy               as np
 from    scipy.ndimage       import  convolve, distance_transform_edt
+
+from    utils.gaussian_kernel       import  getGaussianKernel
 
 
 def _funcHeavyside(x, eps=1.):
@@ -38,7 +43,7 @@ def _calcGradient(x):
     return (gradx, grady)
 
 
-def _calcCurvatureEnergy(u, eta=1.e-8):
+def _calcCurvature(u, eta=1.e-8):
     ''' Return curvature energy
     '''
     # Pad input domain
@@ -111,10 +116,11 @@ class RSF(object):
         Ereg = self.mu*(laplacian - curvature);
 
         # Build scaling kernel
-        height, width = (4*sigma + 1, 4*sigma + 1)
-        kernel = np.ones((height, width), dtype=np.float64)
-        kernel = kernel / height / width
-        
+        #height, width = (4*sigma + 1, 4*sigma + 1)
+        #KERNEL = np.ones((height, width), dtype=np.float64)
+        #KERNEL = KERNEL / height / width
+        KERNEL = getGaussianKernel(sigma, (4*sigma+1, 4*sigma+1), ndim=2)
+
         # Region scalable fitting energy
         region = _funcHeavyside(phi)
         
