@@ -90,5 +90,7 @@ or using below command.
 
 [[11]](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.186.194&rep=rep1&type=pdf) *C. Couprie, L. Grady, L. Najman and H. Talbot, "Power Watershed: A Unifying Graph-Based Optimization Framework," in IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 33, no. 7, pp. 1384-1399, July 2011, doi: 10.1109/TPAMI.2010.200.*
 
+[[12]](http://eprints.bournemouth.ac.uk/30152/1/imageSeg-mmlbf.pdf) *Cheng, D., Tian, F., Liu, L. et al. Image segmentation based on multi-region multi-scale local binary fitting and Kullback–Leibler divergence. SIViP 12, 895–903 (2018).*
+
 ## License
 [MIT License](./LICENSE)
