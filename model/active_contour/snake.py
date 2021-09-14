@@ -24,8 +24,8 @@ def _calcEdgeEnergy(u):
     ''' Return image edge energy by using Sobel operator
     '''
     # Extract image edges with Sobel filter
-    gradx = convolve(u, SOBEL_X, mode="constant")
-    grady = convolve(u, SOBEL_Y, mode="constant")
+    gradx = convolve(u, SOBEL_X, mode="nearest")
+    grady = convolve(u, SOBEL_Y, mode="nearest")
 
     '''
     # Pad input domain
@@ -38,6 +38,7 @@ def _calcEdgeEnergy(u):
     return -(fx**2. + fy**2.)
     '''
     return (gradx**2. + grady**2.)
+
 
 def _calcScaleEnergy(u, sigma=3):
     ''' Return image scale energy

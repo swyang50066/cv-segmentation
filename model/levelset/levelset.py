@@ -2,7 +2,7 @@ import  numpy       as  np
 from    scipy.ndimage.filters   import  gaussian_filter
 
 
-def __funcGradientIndicator(x, alpha=2, sigma=1):
+def _funcGradientIndicator(x, alpha=2, sigma=1):
     ''' Return gradient indicator
     '''
     # Apply gaussian kernel
