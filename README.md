@@ -3,7 +3,7 @@
 
 ## Introduction
 This repository includes diverse algorithmic method of model-based medical image segmentation.  
-The terminology of `model-based` means one which is hypothesized and parameterized model, 
+The terminology of `model-based` means one which is hypothesized and parameterized model,  
 so it is a bit free from the requirement of plenty of labeling data  
 (the counter example is usually called data-driven method).  
 
