@@ -39,6 +39,7 @@ def _calcEdgeEnergy(u):
     '''
     return (gradx**2. + grady**2.)
 
+
 def _calcScaleEnergy(u, sigma=3):
     ''' Return image scale energy
     '''
