@@ -101,10 +101,11 @@ class GraphUndirectedWeighted(object):
 def MinimumSpanningTree(graph, initIndex=None):
     ''' Build mininum spanning tree using Kruskal/Prim algorithm
     '''
-    # Initialize root node
+    # Set valid root node
     if not initIndex or initIndex >= len(graph):
-        # Randomly choose root node
         initIndex = np.random.randint(len(graph))
+    
+    # Initialize root node
     root = Node(parent=None,
                 level=0,
                 index=initIndex,
@@ -114,93 +115,47 @@ def MinimumSpanningTree(graph, initIndex=None):
     visited = [0] * len(graph)
     visited[initIndex] = 1
 
-    # Define leaf node container
-    leaf = list()
+    # Define container of leaf nodes
+    leaves = list()
 
     # Build mininum spanning tree
     adjacency = [edge + (root,) for edge in graph[initIndex]]
     while adjacency:
-        # Select minimum weighted connection
+        # Select a minimum weighted edge from query
         weight, n1, n2, parent = heapq.heappop(adjacency)
 
-        # Update search query
+        # Find next edge query
         for edge in graph[n2]:
-            #print(n1, '=>', n2, '=>', edge[2])
+            # Skip visited node 
             if visited[edge[2]]:
                 continue
             else:
-                node = Node(parent=parent,
-                            level=parent.level+1,
-                            index=n2,
-                            weight=weight)
-
-                parent.addChild(node)
-
                 visited[edge[2]] = parent.level+1
                 
-                heapq.heappush(adjacency, edge + (node,))
+            # Define branch node
+            #   root -> branch1 -> branch2 -> ... -> leaf
+            branch = Node(parent=parent,
+                          level=parent.level+1,
+                          index=n2,
+                          weight=weight)
 
-        if len(parent.children) and parent.level == 1:
-            visited[n2] = 2
+            # Append child node to parent node
+            parent.addChild(branch)
 
-        if len(parent.children) == 0:
-            node = Node(parent=parent,
+            # Push heap node
+            heapq.heappush(adjacency, edge + (branch,))
+        
+        # Check if the current node is leaf node
+        if len(parent.children) and parent.level == 0:
+            visited[n2] = 2    # mark first branch nodes
+        elif not parent.children:
+            # Define leaf node
+            leaf = Node(parent=parent,
                         level=parent.level+1,
                         index=n2,
                         weight=weight)
 
-            leaf.append(node)
+            # Append leaf node
+            leaves.append(leaf)
 
-    return leaf
-
-
-if __name__=="__main__":
-    imsample = np.array([[0, 0, 1, 0, 0],
-                         [0, 1, 4, 1, 0],
-                         [1, 4, 8, 4, 1],
-                         [0, 1, 4, 1, 0],
-                         [0, 0, 1, 0, 0]])
-  
-    import cv2
-    imsample = cv2.imread("../asset/cameraman.png")[..., 0].astype(np.float32)
-    imsample = (imsample - imsample.min())/(imsample.max() - imsample.min())
-    #imsample = imsample[241:271, 241:271]
-    imsample = imsample[251:271, 251:271]
-
-    gray_imsample = 255 * (imsample - imsample.min())/(imsample.max() - imsample.min())
-    height, width = imsample.shape
-
-
-    graph = GraphUndirectedWeighted(imsample)()
-    mst = MinimumSpanningTree(graph, 120)
-
-    import matplotlib.pyplot as plt
-
-    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(10, 10))
-        
-    axes.imshow(gray_imsample, cmap="Greys") 
-    
-    for m in mst:
-        a, b = m.parent.index, m.index
-        
-        xa, ya = a//width, a%width
-        xb, yb = b//width, b%width
-        axes.scatter(ya, xa, color="Blue", s=20)
-        
-        while m.parent:
-            a, b = m.index, m.parent.index
-        
-            xa, ya = a//width, a%width
-            xb, yb = b//width, b%width
-        
-            axes.scatter(yb, xb, color="Red", s=20)
-            axes.arrow(yb, xb, ya-yb, xa-xb, color="lime", head_width=.05, head_length=.1)
-
-            m = m.parent
-
-            if m.parent == None:
-                axes.scatter(yb, xb, color="Green", s=20)
-
-
-    plt.show()
-    plt.clf()
+    return leaves
