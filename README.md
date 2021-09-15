@@ -2,58 +2,73 @@
 ![Python](https://img.shields.io/pypi/pyversions/tensorflow.svg?style=plastic)
 
 ## Introduction
-This repository includes diverse algorithmic method of model-based medical image segmentation. The terminology of `model-based` means one which is hypothesized and parameterized model, so it is a bit free from the requirement of plenty of labeling data (the counter example is usually called data-driven method). The below list describes the classification of model-based method and the representative models belonging to it. 
+This repository includes diverse algorithmic method of model-based medical image segmentation.  
+The terminology of `model-based` means one which is hypothesized and parameterized model,  
+so it is a bit free from the requirement of plenty of labeling data (the counter example is usually called data-driven method).  
+
+The below list describes the classification of model-based method and the representative models belonging to it. 
 
 * **Region-Based**
-	* Region Growing (included)
-	* Grow-Cut (included)
+	* Region Growing
+	* Grow-Cut
 * **Active Contour**
-	* Snake Model (included)
-	* Gradient Vector Field (maintenance)
+	* Snake Model 
+	* Gradient Vector Flow 
 * **Level-Set**
-	* Level-set Method (included)
-	* Chan-Vese Model (included)
-	* Morphological Chan-Vese Model (included)
-	* Region Scalable Fitting Method (RSF) (maintenance)
-	* Distance Regularized Level Set Evolution (DRLSE) (maintenance)
-	* Kullback-Leibler-Based Level-set Method (to be updated)
+	* Level-set Method 
+	* Chan-Vese Model 
+	* Morphological Chan-Vese Model 
+	* Region Scalable Fitting Method (RSF)
+	* Distance Regularized Level Set Evolution (DRLSE)
+	* Kullback-Leibler-Based Level-set Method (***to be updated***)
 * **Graph-Based**
-	* Graph-Cut (included)
-	* Simulated Annealing Method (included)
-	* Markov Random Field (included)
-	* Conditional Random Field (maintenance)
-	* Power Watershed Random Field (maintenance)
+	* Graph-Cut 
+	* Simulated Annealing Method 
+	* Random Walker with Prior Model 
+	* Power Watershed Random Field (***to be updated***)
 * **Clustering**
-	* Gaussian Mixture Model (included)
-	* Taboggan/Superpixel Clustering (included)
+	* Gaussian Mixture Model 
+	* Taboggan/Superpixel Clustering 
 
 Currently, some methods are stiil in maintenance 
 
 ## Installation
-To be updated (21.09.06)
+You can simply use functions in this repository by cloning repository,
+
+~~~
+{user}@{work-node}: {workplace}$ git clone https://github.com/swyang50066/segmentation.git
+~~~
+
+or using below command.
+
+~~~
+{user}@{work-node}: {workplace}$ sudo pip install git+https://github.com/swyang50066/segmentation.git 
+~~~
 
 ## Usage
-To be updated (21.09.06)
+***To be updated***
 
 ## Contribution
-To be updated (21.09.06)
+***To be updated***
 
 ## Requirements
  All codes have developed in python and tested with `python>=3.6.0` environment (but, it stably supports functions with `python==3.8.0`). Numerical schemes (e.g., matrix operation, linear algebra, graph algorithm, ... etc.) used in the models is designed with  `numpy` and `scipy` modules for efficient computing. 
  
 ```
  requirements={
- "python>=3.6.0",
- "opencv-python>3.4.0",
- "numpy>=1.2.0",
- "scipy>=1.1.0",
- "scikit-learn>=0.20.0",
- "maxflow"
+ 	"python>=3.6.0",
+ 	"opencv-python>3.4.0",
+ 	"numpy>=1.18.0",
+ 	"scipy>=1.1.0",
+ 	"scikit-learn>=0.20.0",
+ 	"scikit-build>=0.12.0",
+ 	"opencv-python>3.4.0",
+ 	"PyMaxFlow>=1.2.0",
  }
 ```
 
-## CAVEATS
-
+## CAVEAT
+***To be announced***
 
 ## References
 [[1]](http://iacl.ece.jhu.edu/pubs/p087c.pdf) *C. Xu and J.L. Prince, "Gradient Vector Flow: A New External Force for Snakes," Proc. IEEE Conf. on Comp. Vis. Patt. Recog. (CVPR), Los Alamitos: Comp. Soc. Press, pp. 66–71, June 1997*
@@ -78,6 +93,8 @@ To be updated (21.09.06)
 [[10]](https://arxiv.org/abs/1606.00915) *L. -C. Chen, G. Papandreou, I. Kokkinos, K. Murphy and A. L. Yuille, "DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs," in IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 40, no. 4, pp. 834-848, 1 April 2018, doi: 10.1109/TPAMI.2017.2699184.*
 
 [[11]](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.186.194&rep=rep1&type=pdf) *C. Couprie, L. Grady, L. Najman and H. Talbot, "Power Watershed: A Unifying Graph-Based Optimization Framework," in IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 33, no. 7, pp. 1384-1399, July 2011, doi: 10.1109/TPAMI.2010.200.*
+
+[[12]](http://eprints.bournemouth.ac.uk/30152/1/imageSeg-mmlbf.pdf) *Cheng, D., Tian, F., Liu, L. et al. Image segmentation based on multi-region multi-scale local binary fitting and Kullback–Leibler divergence. SIViP 12, 895–903 (2018).*
 
 ## License
 [MIT License](./LICENSE)
