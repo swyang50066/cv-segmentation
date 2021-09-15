@@ -255,3 +255,61 @@ def prims_algo(
                 parent[neighbour] = node
     return dist, parent
 
+
+import sys
+from heapq import *
+from collections import defaultdict  # key에 맞는 value 지정하지 않아도 빈 리스트로 초기화 가능, 자료형 변수타입 다 넣기 가능
+
+graph = defaultdict(list)
+edge_list = []
+v, e = map(int, sys.stdin.readline().rstrip().split())
+
+
+def prim(start, graph):
+    tree_set = set([start])  # 정수라 [] 써야됨
+    mst = list()
+    fringe_set = graph[start]
+    heapify(fringe_set)  # list였던 graph_data가 heap 구조로 한번에 바뀜
+    # for edge in graph_data:
+    #     heapq.heappush(queue,edge)
+    #     pass
+    while fringe_set:
+        weight, x1, x2 = heappop(fringe_set)
+
+        if x2 not in tree_set:
+            tree_set.add(x2)
+            mst.append((weight, x1, x2))
+
+            # n2 들어간거 fringe에 넣음
+            for edge in graph[x2]:
+                heappush(fringe_set, edge)
+                pass
+            pass
+        pass
+
+    return mst
+    pass
+
+
+def calc(mst):
+    res = 0
+    for edge in mst:
+        res += edge[0]
+        pass
+    return res
+    pass
+
+
+while e > 0:
+    a, b, c = map(int, sys.stdin.readline().rstrip().split())
+    e -= 1
+    edge_list.append((c, a, b))  # value, vertices
+    pass
+
+# graph
+for weight, x1, x2 in edge_list:
+    graph[x1].append((weight, x1, x2))
+    graph[x2].append((weight, x2, x1))
+    pass
+
+print(calc(prim(1, graph)))
