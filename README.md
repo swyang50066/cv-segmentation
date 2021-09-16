@@ -2,7 +2,11 @@
 ![Python](https://img.shields.io/pypi/pyversions/tensorflow.svg?style=plastic)
 
 ## Introduction
-This repository includes diverse algorithmic method of model-based medical image segmentation. The terminology of `model-based` means one which is hypothesized and parameterized model, so it is a bit free from the requirement of plenty of labeling data (the counter example is usually called data-driven method). The below list describes the classification of model-based method and the representative models belonging to it. 
+This repository includes diverse algorithmic method of model-based medical image segmentation.  
+The terminology of `model-based` means one which is hypothesized and parameterized model,  
+so it is a bit free from the requirement of plenty of labeling data (the counter example is usually called data-driven method).  
+
+The below list describes the classification of model-based method and the representative models belonging to it. 
 
 * **Region-Based**
 	* Region Growing
