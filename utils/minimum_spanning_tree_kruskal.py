@@ -92,50 +92,28 @@ class UnionFind(object):
     def union(self, x, y):
         ''' Unify two branches
         '''
-        # Find mergee and merger
-        order = str()
-        if self.find(y) < self.find(x):
-            order = "forward"
-            xx, yy = x, y
-        else:
-            order = "backward"
-            xx, yy = y, x
-
         # Merge two branches
-        yy.addChild(xx)
+        y.addChild(x)
 
-        xx.setLabel(yy.label)
-
-        if not xx.parent:
-            xx.parent = yy
-            if order == "forward":
-                return xx, yy
-            else:
-                return yy, xx
+        x.setLabel(y.label)
 
         # List upstream nodes from merger
-        geneaology = deque([xx])
-        a = xx.parent
-        while a.parent:
-            geneaology.appendleft(a)
-            a = a.parent
-
-        abc = [g.index for g in geneaology]
-        
+        geneaology = deque([x])
+        a = x.parent
+        if a != None:
+            while a.parent:
+                geneaology.appendleft(a)
+                a = a.parent
 
         # Reverse stream
-        cba = list()
         while geneaology:
             g = geneaology.popleft()
             if len(geneaology) > 0:
                 g.parent = geneaology[0]
             else:
-                g.parent = yy
+                g.parent = y
         
-        if order == "forward":
-            return xx, yy
-        else:
-            return yy, xx
+        return x, y
 
     def find(self, x):
         ''' Return level of node
@@ -254,6 +232,10 @@ def KruskalMST(graph, conns):
         weight, n1, n2 = query.popleft()
         n1, n2 = int(n1), int(n2)
         
+        print("AQQS \t\t\t", nodes[n1].index, nodes[n2].index, 
+                             nodes[n1].label, nodes[n2].label)
+
+        
         # Unify nodes
         if nodes[n1].label != nodes[n2].label:
             nodes[n1], nodes[n2] = ufo.union(nodes[n1], nodes[n2])
@@ -266,7 +248,6 @@ def KruskalMST(graph, conns):
     indice = [node.index for node in nodes]
     roots = [node.upstream().index for node in nodes]
     print("labels", labels)
-    print("indice", indice)
     print("roots", roots)
 
     for i, node in enumerate(nodes):
