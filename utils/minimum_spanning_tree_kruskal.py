@@ -23,6 +23,11 @@ class Node(object):
         self.index = index          # unique node index labeled in tree
         self.weight = weight        # edge-weight with parent node 
         self.label = label          # unique label of connected nodes
+    
+    def addChild(self, child):
+        ''' Append children
+        '''
+        self.children.append(child)
 
     def upstream(self):
         ''' Return root node
@@ -36,7 +41,9 @@ class Node(object):
             return root
 
     def downstream(self):
-        ''' Return leaf nodes of current branch (not the whole tree)
+        ''' Return leaf nodes of current branch 
+            If you want to get whole leaf nodes,
+            use 'self.upstream' to find root node.
         '''
         branches, leaves = self.children, list()
         while branches:
@@ -54,19 +61,59 @@ class Node(object):
 
         return leaves
 
-    def addChild(self, child):
-        ''' Append children
-        '''
-        self.children.append(child)
 
-    def setLabel(self, label):
+class UnionFind(object):
+    ''' This is a set operator that is kind of disjoint set
+    '''
+    def union(self, x, y):
+        ''' Unify two branches
+        '''
+        # Reset label of merger 
+        x = self.merge(x, y.label)
+
+        # List new branch stream
+        stream = deque([x, y])
+        parent = x.parent
+        while parent:
+            stream.appendleft(parent)
+            parent = parent.parent
+
+        # Reverse stream order
+        while len(stream) > 1:
+            node = stream.popleft()
+            
+            # Change relation of parent-child
+            node.parent = stream[0]
+            if stream[0] in node.children:
+                node.children.remove(stream[0])
+            stream[0].addChild(node)
+
+        return x, y
+
+    def find(self, x):
+        ''' Return level of node
+        '''
+        if x.level:
+            return x.level
+        else:
+            level = int()
+            while x.parent:
+                level += 1
+                x = x.parent
+
+            # Assign level
+            x.level = level
+
+            return level
+    
+    def merge(self, x, label):
         ''' Set label on connected components
         '''
         # Change current label
         self.label = label
 
         # Get root node
-        root = self.upstream()
+        root = x.upstream()
         root.label = label
 
         # Propagate new label til leaf node
@@ -85,51 +132,7 @@ class Node(object):
             # Downward
             branches = stream
 
-
-class UnionFind(object):
-    ''' This is a set operator that is kind of disjoint set
-    '''
-    def union(self, x, y):
-        ''' Unify two branches
-        '''
-        # Merge two branches
-        y.addChild(x)
-
-        x.setLabel(y.label)
-
-        # List upstream nodes from merger
-        geneaology = deque([x])
-        a = x.parent
-        if a != None:
-            while a.parent:
-                geneaology.appendleft(a)
-                a = a.parent
-
-        # Reverse stream
-        while geneaology:
-            g = geneaology.popleft()
-            if len(geneaology) > 0:
-                g.parent = geneaology[0]
-            else:
-                g.parent = y
-        
-        return x, y
-
-    def find(self, x):
-        ''' Return level of node
-        '''
-        if x.level:
-            return x.level
-        else:
-            level = int()
-            while x.parent:
-                level += 1
-                x = x.parent
-
-            # Assign level
-            x.level = level
-
-            return level
+        return x
 
 
 class GraphUndirectedWeighted(object):
@@ -232,92 +235,16 @@ def KruskalMST(graph, conns):
         weight, n1, n2 = query.popleft()
         n1, n2 = int(n1), int(n2)
         
-        print("AQQS \t\t\t", nodes[n1].index, nodes[n2].index, 
-                             nodes[n1].label, nodes[n2].label)
-
-        
         # Unify nodes
         if nodes[n1].label != nodes[n2].label:
-            nodes[n1], nodes[n2] = ufo.union(nodes[n1], nodes[n2])
-        
-        print("DDVC \t\t\t", nodes[n1].index, nodes[n2].index, 
-                             nodes[n1].label, nodes[n2].label)
-
-
-    labels = [node.label for node in nodes]
-    indice = [node.index for node in nodes]
-    roots = [node.upstream().index for node in nodes]
-    print("labels", labels)
-    print("roots", roots)
-
-    for i, node in enumerate(nodes):
-        branch = list()
-        while node.parent:
-            branch.append(node.parent.index)
-            node = node.parent
-
-        print("\t >>> [%d]"%i, branch)
+            # Attech branch from small to large one
+            if ufo.find(nodes[n1]) < ufo.find(nodes[n2]):
+                nodes[n1], nodes[n2] = ufo.union(nodes[n1], nodes[n2])
+            else:
+                nodes[n2], nodes[n1] = ufo.union(nodes[n2], nodes[n1])
 
     # Find leaf nodes
-    root = nodes[1].upstream()
+    root = nodes[0].upstream()
     leaves = root.downstream()
 
     return leaves
-
-
-import cv2
-import matplotlib.pyplot as plt
-
-def drawMSF(x, leaves):
-    # Get input shape
-    height, width = x.shape
-    
-    # Gray-scale
-    gray = 255*(x - x.min())/(x.max() - x.min())
-
-    # Define plot components
-    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(6, 6))
-
-    # Plot MSF
-    axes.imshow(gray, cmap="Greys")
-    for leaf in leaves:
-        # Mark leaf node
-        xa, ya = leaf.index//width, leaf.index%width
-        axes.scatter(ya, xa, color="Blue", s=20, marker="s")
-
-        while leaf.parent:
-            # Mark branch node
-            a, b = leaf.parent.index, leaf.index
-        
-            xa, ya = a//width, a%width
-            xb, yb = b//width, b%width
-        
-            axes.scatter(ya, xa, color="Red", s=20)
-            axes.arrow(ya, xa, yb-ya, xb-xa, color="lime", head_width=.05, head_length=.1)
-
-            # Upstream
-            leaf = leaf.parent
-
-            # Mark root node
-            if leaf.parent == None:
-                axes.scatter(ya, xa, color="Green", s=20, marker="D")
-
-    plt.show()
-    plt.clf()
-
-# Load sample image
-imsample = np.array([[0, 0, 1, 0, 0],
-                     [0, 1, 4, 1, 0],
-                     [1, 4, 6, 4, 1],
-                     [0, 1, 4, 1, 0],
-                     [0, 0, 1, 0, 0]])
-
-# Build undirected/weighted image graph
-graph = GraphUndirectedWeighted(imsample)(output="graph")
-conns = GraphUndirectedWeighted(imsample)(output="connection")
-
-# Find minimum spanning tree with Kruskal's algorithm
-leaves = KruskalMST(graph, conns)
-
-# Draw MSF
-drawMSF(imsample, leaves)

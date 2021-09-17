@@ -134,7 +134,8 @@ def PrimMST(graph, initIndex=None):
             if visited[edge[2]]:
                 continue
             else:
-                visited[edge[2]] = parent.level+1
+                visited[n2] = parent.level+1
+                visited[edge[2]] = parent.level+2
                 
             # Define branch node
             #   root -> branch1 -> branch2 -> ... -> leaf
@@ -149,10 +150,8 @@ def PrimMST(graph, initIndex=None):
             # Push heap node
             heapq.heappush(adjacency, edge + (branch,))
         
-        # Check if the current node is leaf node
-        if len(parent.children) and parent.level == 0:
-            visited[n2] = 2    # mark first branch nodes
-        elif not parent.children:
+        # Check the node is reached at leaf node
+        if not parent.children:
             # Define leaf node
             leaf = Node(parent=parent,
                         level=parent.level+1,
