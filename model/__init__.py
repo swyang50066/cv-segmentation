@@ -12,10 +12,10 @@ from    model.graph.simulated_annealing     import  SimulatedAnealing
 #from    model.graph.power_watershed     import  PowerWatershed
 
 from    model.levelset.levelset     import  LevelSet
-#from    model.levelset.chanvese     import  ChanVese
+from    model.levelset.chanvese     import  ChanVese
 from    model.levelset.morph_chanvese       import  MorphChanVese
-#from    model.levelset.distance_regularized_levelset_evolution      import  DRLSE
-#from    model.levelset.region_scalable_fitting      import  RSF
+from    model.levelset.DRLSE      import  DRLSE
+from    model.levelset.RSF      import  RSF
 
 from    model.region.growregion     import  GrowRegion
 from    model.region.growcut        import  GrowCut
