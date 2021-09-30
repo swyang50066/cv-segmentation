@@ -32,6 +32,8 @@ The below list describes the classification of model-based method and the repres
 
 Currently, some methods are stiil in maintenance 
 
+**GUI application for user-interactive medical image segmentation is building**
+
 ## Installation
 You can simply use functions in this repository by cloning repository,
 
