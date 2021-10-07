@@ -83,7 +83,7 @@ class ChanVese(object):
         seed = seed.astype(np.float)
         phi = (distance_transform_edt(seed) 
                - distance_transform_edt(1-seed) 
-               + distance_transform_edt(seed-.5))
+               + distance_transform_edt(seed-.5 > 0))
 
         return phi
 
