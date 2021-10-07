@@ -135,7 +135,7 @@ def DRLSE(object):
         # Get signed distance function based on seed map
         phi = (distance_transform_edt(seed)
                - distance_transform_edt(1-seed)
-               + distance_transform_edt(seed-.5))
+               + distance_transform_edt(seed-.5 > 0))
 
         return phi
 
