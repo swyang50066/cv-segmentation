@@ -66,6 +66,8 @@ Usage of segmentation models is guided in './examples/xxxx.ipynb' with example r
 1. Build a GUI application for user-interactive medical image segmentation
 2. Upload `Power Watershed Random Field` model
 
+***Updates are being delayed due to busy life.***
+
 ## Contribution
 ***To be updated***
 
