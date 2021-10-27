@@ -30,10 +30,6 @@ The below list describes the classification of model-based method and the repres
 	* Gaussian Mixture Model 
 	* Taboggan/Superpixel Clustering 
 
-Currently, some methods are stiil in maintenance 
-
-**GUI application for user-interactive medical image segmentation is now building**
-
 ## Installation
 You can simply use functions in this repository by cloning repository,
 
@@ -48,10 +44,7 @@ or using below command.
 ~~~
 
 ## Usage
-***To be updated***
-
-## Contribution
-***To be updated***
+Usage of segmentation models is guided in './examples/xxxx.ipynb' with example runs, so please refer to the scripts to figure out how the models work!
 
 ## Requirements
  All codes have developed in python and tested with `python>=3.6.0` environment (but, it stably supports functions with `python==3.8.0`). Numerical schemes (e.g., matrix operation, linear algebra, graph algorithm, ... etc.) used in the models is designed with  `numpy` and `scipy` modules for efficient computing. 
@@ -69,8 +62,12 @@ or using below command.
  }
 ```
 
-## CAVEAT
-***To be announced***
+## To-Do
+1. Build a GUI application for user-interactive medical image segmentation
+2. Upload `Power Watershed Random Field` model
+
+## Contribution
+***To be updated***
 
 ## References
 [[1]](http://iacl.ece.jhu.edu/pubs/p087c.pdf) *C. Xu and J.L. Prince, "Gradient Vector Flow: A New External Force for Snakes," Proc. IEEE Conf. on Comp. Vis. Patt. Recog. (CVPR), Los Alamitos: Comp. Soc. Press, pp. 66–71, June 1997*
