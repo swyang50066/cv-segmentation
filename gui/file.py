@@ -25,18 +25,20 @@ class File(object):
             raise ValueError
 
         # Set attribute map
-        attribute = {"PatientName": "None",
-                     "PatientID": "None",
-                     "PatientAge": "None",
-                     "PatientBirthDate": "None",
-                     "PatientSex": "None",
-                     "ImageType": "None",
-                     "Modality": "None",
-                     "Manufacturer": "None",
-                     "KVP": "None",
-                     "StudyDescription": "None",
-                     "SeriesDescription": "None",
-                     "Spacing": "None"}
+        attribute = {
+            "PatientName": "None",
+            "PatientID": "None",
+            "PatientAge": "None",
+            "PatientBirthDate": "None",
+            "PatientSex": "None",
+            "ImageType": "None",
+            "Modality": "None",
+            "Manufacturer": "None",
+            "KVP": "None",
+            "StudyDescription": "None",
+            "SeriesDescription": "None",
+            "Spacing": "None"
+        }
 
         # Convert image format to volume
         zpos = np.zeros(len(sequence))
@@ -109,13 +111,17 @@ class File(object):
         '''
         # Check existence of sequential images
         if "_" in path.split("/")[-1]:
-            load = ("/".join(path.split("/")[:-1]) 
-                    + '/' + path.split("/")[-1].split("_")[-2] 
-                    + "*")
+            load = (
+                "/".join(path.split("/")[:-1]) 
+                + '/' + path.split("/")[-1].split("_")[-2] 
+                + "*"
+            )
         else:
-            load = ("/".join(path.split("/")[:-1]) 
-                    + '/' + path.split("/")[-1] 
-                    + "*")
+            load = (
+                "/".join(path.split("/")[:-1]) 
+                + '/' + path.split("/")[-1] 
+                + "*"
+            )
 
         # Catch image files
         sequence = glob.glob(load) 

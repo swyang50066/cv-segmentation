@@ -1,55 +1,26 @@
 import  numpy   as  np
 
 
-class Variable(object):
-    def initialize(self, figure, axes):
-        titles = ["diameter",
-                  "circularity",
-                  "elliptical ratio (ER)",
-                  "tortuosity"]
-        for index, ax in enumerate(axes):
-            ax.clear()
-
-            ax.set_xticks([])
-            ax.set_yticks([])
-            ax.set_ylabel(titles[index], fontsize=8)
-            
-            if index+1 == len(titles):
-                ax.set_xlabel("slice", fontsize=8)
-
-        figure.draw()
-
-    def scatter(self, x, y, figure, axes, ptype=None):
-        colors = {"max-radius": "Blue",
-                  "min-radius": "Red",
-                  "circularity": "Green",
-                  "elliptical-ratio": "Black",
-                  "turtuosity": "Orange"}
-
-        axes.scatter(x, y, s=2, color=colors[ptype])
-
-        figure.draw()
-
-
 class Histogram(object):
     def initialize(self, array, figure, axes, margin=4):
         axes.clear()
         array = array[array > 0].ravel()
-        freq, _, _ = axes.hist(array, 
-                               128,
-                               density=True,
-                               facecolor="gray")
+        freq, _, _ = axes.hist(array, 128, density=True, facecolor="gray") 
 
         self.xmin, self.xmax = array.min(), array.max()      
 
-        self.lowerspan = axes.axvspan(self.xmin, self.xmin+margin, 
-                                      facecolor='blue', 
-                                      edgecolor='yellow', 
-                                      alpha=.2)
-        self.upperspan = axes.axvspan(self.xmax-margin, self.xmax, 
-                                      facecolor='blue', 
-                                      edgecolor='yellow', 
-                                      alpha=.2)
+        self.lowerspan = axes.axvspan(
+            self.xmin, self.xmin+margin, 
+            facecolor='blue', 
+            edgecolor='yellow', 
+            alpha=.2
+        )
+        self.upperspan = axes.axvspan(
+            self.xmax-margin, self.xmax, 
+            facecolor='blue', 
+            edgecolor='yellow', 
+            alpha=.2
+        )
  
         axes.set_xticks([])
         axes.set_yticks([])
@@ -61,25 +32,26 @@ class Histogram(object):
     def drawLocalHistogram(self, array, local, figure, axes, margin=4):
         axes.clear()
         array = array[array > 0].ravel()
-        axes.hist(array, 
-                  128,
-                  density=True,
-                  facecolor="gray")
-        freq, _, _ = axes.hist(local.ravel(), 
-                               128,
-                               density=True,
-                               facecolor="green")
+        axes.hist(array, 128, density=True, facecolor="gray")
+        
+        freq, _, _ = axes.hist(
+            local.ravel(), 128, density=True, facecolor="green"
+        )
 
         self.xmin, self.xmax = array.min(), array.max()
 
-        self.lowerspan = axes.axvspan(self.xmin, self.xmin+margin,
-                                      facecolor='blue',
-                                      edgecolor='yellow',
-                                      alpha=.2)
-        self.upperspan = axes.axvspan(self.xmax-margin, self.xmax,
-                                      facecolor='blue',
-                                      edgecolor='yellow',
-                                      alpha=.2)
+        self.lowerspan = axes.axvspan(
+            self.xmin, self.xmin+margin,
+            facecolor='blue',
+            edgecolor='yellow',
+            alpha=.2
+        )
+        self.upperspan = axes.axvspan(
+            self.xmax-margin, self.xmax,
+            facecolor='blue',
+            edgecolor='yellow',
+            alpha=.2
+        )
 
         axes.set_xticks([])
         axes.set_yticks([])
@@ -89,16 +61,20 @@ class Histogram(object):
         figure.draw()
 
     def shiftRange(self, xposmin, xposmax, figure, axes, margin=4):
-        lowerxy = [[self.xmin, 0],
-                   [self.xmin, 1],
-                   [xposmin+margin, 1],
-                   [xposmin+margin, 0],
-                   [self.xmin, 0]]
-        upperxy = [[xposmax-margin, 0],
-                   [xposmax-margin, 1],
-                   [self.xmax, 1],
-                   [self.xmax, 0],
-                   [xposmax-margin, 0]]
+        lowerxy = [
+            [self.xmin, 0],
+            [self.xmin, 1],
+            [xposmin+margin, 1],
+            [xposmin+margin, 0],
+            [self.xmin, 0]
+        ]
+        upperxy = [
+            [xposmax-margin, 0],
+            [xposmax-margin, 1],
+            [self.xmax, 1],
+            [self.xmax, 0],
+            [xposmax-margin, 0]
+        ]
 
         self.lowerspan.set_xy(lowerxy)
         self.upperspan.set_xy(upperxy)

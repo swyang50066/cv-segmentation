@@ -16,8 +16,8 @@ import  vtk
 from    vtk.qt.QVTKRenderWindowInteractor       import  QVTKRenderWindowInteractor
 
 from    visualizer.canvas       import  Canvas
-from    visualizer.graph        import  Variable, Histogram
-from    visualizer.recon        import  IsoSurface, IsoLine
+from    visualizer.graph        import  Histogram
+from    visualizer.recon        import  IsoSurface
 
 
 class Structure(object):
@@ -45,36 +45,28 @@ class Structure(object):
         fileMenu = self.mainMenuBar.addMenu("&File")
 
         # Open button
-        openButton = QAction(QIcon("exit.png"), 
-                             "Open Image", 
-                             self.window)
+        openButton = QAction(QIcon("exit.png"), "Open Image", self.window)
         openButton.setShortcut("Ctrl+O")
         openButton.setStatusTip("Open a image file for segmentation")
         openButton.triggered.connect(self.openFile)
         fileMenu.addAction(openButton)
 
         # Save button
-        saveButton = QAction(QIcon("exit.png"), 
-                             "Save Image", 
-                             self.window)
+        saveButton = QAction(QIcon("exit.png"), "Save Image", self.window)
         saveButton.setShortcut("Ctrl+S")
         saveButton.setStatusTip("Save result")
         saveButton.triggered.connect(self.saveFile)
         fileMenu.addAction(saveButton)
         
         # Save STL button
-        saveSTLButton = QAction(QIcon("exit.png"), 
-                                "Save STL", 
-                                self.window)
+        saveSTLButton = QAction(QIcon("exit.png"), "Save STL", self.window)
         saveSTLButton.setShortcut("Ctrl+L")
         saveSTLButton.setStatusTip("Save STL")
         saveSTLButton.triggered.connect(self.saveSTL)
         fileMenu.addAction(saveSTLButton)
 
         # Close button
-        closeButton = QAction(QIcon("exit.png"), 
-                              "Exit", 
-                              self.window)
+        closeButton = QAction(QIcon("exit.png"), "Exit", self.window)
         closeButton.setShortcut("Ctrl+Q")
         closeButton.setStatusTip("Exit application")
         closeButton.triggered.connect(self.closeWindow)
@@ -86,10 +78,8 @@ class Interface(Structure):
         super().__init__()
         # Declare visualizer classes
         self.canvas = Canvas()
-        self.variableView = Variable()
         self.histogramView = Histogram()
         self.isoSurface = IsoSurface()
-        self.isoLine = IsoLine()
 
         # Setup main box layout
         mainGridLayout = QGridLayout()
@@ -146,34 +136,41 @@ class Interface(Structure):
         dotMarkUpButton = QPushButton("Dot")
         dotMarkUpButton.setStyleSheet("background-color: white")
         dotMarkUpButton.clicked.connect(
-                                lambda: self.turnOnMarkUpTag("dot"))
+            lambda: self.turnOnMarkUpTag("dot")
+        )
 
         lineMarkUpButton = QPushButton("Line")
         lineMarkUpButton.setStyleSheet("background-color: white")
         lineMarkUpButton.clicked.connect(
-                                lambda: self.turnOnMarkUpTag("line"))
+            lambda: self.turnOnMarkUpTag("line")
+        )
 
         arcMarkUpButton = QPushButton("Arc")
         arcMarkUpButton.setStyleSheet("background-color: white")
         arcMarkUpButton.clicked.connect(
-                                lambda: self.turnOnMarkUpTag("arc"))
+            lambda: self.turnOnMarkUpTag("arc")
+        )
 
         boxMarkUpButton = QPushButton("Box")
         boxMarkUpButton.setStyleSheet("background-color: white")
         boxMarkUpButton.clicked.connect(
-                                lambda: self.turnOnMarkUpTag("box"))
+            lambda: self.turnOnMarkUpTag("box")
+        )
 
         curveMarkUpButton = QPushButton("Curve")
         curveMarkUpButton.setStyleSheet("background-color: white")
         curveMarkUpButton.clicked.connect(
-                                lambda: self.turnOnMarkUpTag("curve"))
+            lambda: self.turnOnMarkUpTag("curve")
+        )
         
         # Contain mark-up buttons
-        self.markUpButtons = {'dot': dotMarkUpButton,
-                              'line': lineMarkUpButton,
-                              'arc': arcMarkUpButton,
-                              'box': boxMarkUpButton,
-                              'curve': curveMarkUpButton}
+        self.markUpButtons = {
+            "dot": dotMarkUpButton,
+            "line": lineMarkUpButton,
+            "arc": arcMarkUpButton,
+            "box": boxMarkUpButton,
+            "curve": curveMarkUpButton
+        }
         
         # Add widgets to layout
         drawingLayout.addWidget(dotMarkUpButton)
@@ -297,7 +294,8 @@ class Interface(Structure):
         self.axialQLabel.setScaledContents(True)
         
         axialQPixmap = self.canvas.getQPixmap(
-                                self.canvas.getImageWithSeed())
+            self.canvas.getImageWithSeed()
+        )
         self.axialQLabel.setPixmap(axialQPixmap)
         
         # Add mouse events on seed pixel map
@@ -313,11 +311,13 @@ class Interface(Structure):
         self.axialScrollArea.setWidget(self.axialQLabel)
         self.axialScrollArea.setAlignment(Qt.AlignCenter)
         self.axialScrollArea.horizontalScrollBar().setEnabled(False)
-        self.axialScrollArea.horizontalScrollBar().setStyleSheet(
-            "height: 0px")
         self.axialScrollArea.verticalScrollBar().setEnabled(False)
+        self.axialScrollArea.horizontalScrollBar().setStyleSheet(
+            "height: 0px"
+        )
         self.axialScrollArea.verticalScrollBar().setStyleSheet(
-            "width: 0px")
+            "width: 0px"
+        )
         
         # Coronal view pixmap
         self.coronalQLabel = QLabel()
@@ -326,7 +326,8 @@ class Interface(Structure):
         self.coronalQLabel.wheelEvent = self.wheelCoronalScroll
         
         coronalQPixmap = self.canvas.getQPixmap(
-                                    self.canvas.getImageWithCoronal())
+            self.canvas.getImageWithCoronal()
+        )
         self.coronalQLabel.setPixmap(coronalQPixmap)
 
         # Sagittal view pixmap
@@ -336,7 +337,8 @@ class Interface(Structure):
         self.sagittalQLabel.wheelEvent = self.wheelSagittalScroll
         
         sagittalQPixmap = self.canvas.getQPixmap(
-                                    self.canvas.getImageWithSagittal())
+            self.canvas.getImageWithSagittal()
+        )
         self.sagittalQLabel.setPixmap(sagittalQPixmap)
 
         # Tab menu
@@ -356,7 +358,8 @@ class Interface(Structure):
         self.segmentQLabel.setAlignment(Qt.AlignCenter)
         
         segmentQPixmap = self.canvas.getQPixmap(
-                                    self.canvas.getImageWithSegment())
+            self.canvas.getImageWithSegment()
+        )
         self.segmentQLabel.setPixmap(segmentQPixmap)
 
         # Initialize 3D Rendering view
@@ -366,10 +369,13 @@ class Interface(Structure):
         self.renderer = vtk.vtkRenderer()
         self.vtkWidget.GetRenderWindow().AddRenderer(self.renderer)
         self.interactor = self.vtkWidget.GetRenderWindow().GetInteractor()
-
+       
+        #x = np.zeros((128, 128, 128), dtype=np.float32)
+        #x[32:96, 32:96, 32:96] = 1.
+        #self.isoSurface.run(x, self.renderer)
         self.interactor.Initialize()
         self.interactor.Start()
-        
+         
         # Tab menu
         reconTab = QTabWidget()
         reconTab.addTab(self.segmentQLabel, "SEGMENTATION")
@@ -416,19 +422,21 @@ class Interface(Structure):
         # Tree widget
         self.overviewTree = QTreeWidget()
         self.overviewTree.setColumnCount(2)
-        self.overviewTree.setHeaderLabels(["Step",
-                                           "Attributes",
-                                           "Status",
-                                           "Value"])
+        self.overviewTree.setHeaderLabels([
+            "Step",
+            "Attributes",
+            "Status",
+            "Value"
+        ])
         self.overviewTree.itemChanged.connect(
-                                        self.turnOnVisibleMarker)
+            self.turnOnVisibleMarker
+        )
         self.overviewTree.itemDoubleClicked.connect(
-                                        self.turnOnEditTextMessage)
+            self.turnOnEditTextMessage
+        )
 
-        
         # Add tree menu actions
-        removeMarker = QAction("Delete",
-                               self.overviewTree)
+        removeMarker = QAction("Delete", self.overviewTree)
         removeMarker.triggered.connect(self.turnOnRemoveMarker)
         
         self.overviewTree.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -459,39 +467,17 @@ class Interface(Structure):
         # Species tree window
         self.labelTree = QTreeWidget()
         self.labelTree.setColumnCount(3)
-        self.labelTree.setHeaderLabels(["Species",
-                                        "Class",
-                                        "BGR"])
+        self.labelTree.setHeaderLabels([
+            "Species",
+            "Class",
+            "BGR"
+        ])
         self.labelTree.itemChanged.connect(
-                                    self.turnOnUpdateSpecies)
+            self.turnOnUpdateSpecies
+        )
         self.labelTree.itemSelectionChanged.connect(
-                                    self.turnOnUpdateSpecies)
-
-        # Set default species
-        foregroundTreeItem = QTreeWidgetItem(self.labelTree)
-        foregroundTreeItem.setText(0, "Aorta")
-        foregroundTreeItem.setText(1, "1")
-        foregroundTreeItem.setText(2, "0, 255, 0")
-
-        backgroundTreeItem = QTreeWidgetItem(self.labelTree)
-        backgroundTreeItem.setText(0, "Background")
-        backgroundTreeItem.setText(1, "2")
-        backgroundTreeItem.setText(2, "0, 0, 255")
-
-        # Add species
-        addSpeciesButton = QPushButton("Add Species")
-        addSpeciesButton.clicked.connect(self.turnOnAddSpecies)
-
-        # Remove species
-        removeSpeciesButton = QPushButton("Remove Species")
-        removeSpeciesButton.clicked.connect(self.turnOnRemoveSpecies)
-
-        # Set layers
-        gridLayout.addWidget(self.labelTree, 0, 0, 1, 2)
-        gridLayout.addWidget(addSpeciesButton, 1, 0, 1, 1)
-        gridLayout.addWidget(removeSpeciesButton, 1, 1, 1, 1)
-        gridWidget.setLayout(gridLayout)
-
+            self.turnOnUpdateSpecies
+        )
 
         # Dicom attriute table
         self.dicomTable = QTableWidget()
@@ -505,25 +491,27 @@ class Interface(Structure):
         self.dicomTable.resizeColumnsToContents()
         self.dicomTable.setMinimumHeight(256)
         self.dicomTable.verticalScrollBar().setStyleSheet(
-            "width: 0px")
+            "width: 0px"
+        )
 
         self.dicomTable.setHorizontalHeaderLabels(["Attribute"])
-        self.dicomTable.setVerticalHeaderLabels(["Name",
-                                                 "ID",
-                                                 "Age",
-                                                 "Birth Date",
-                                                 "Sex",
-                                                 "Image Type",
-                                                 "Modality",
-                                                 "Manufacturer",
-                                                 "KVP",
-                                                 "Study Description",
-                                                 "Series Description",
-                                                 "Spacing (xy/z)"])
+        self.dicomTable.setVerticalHeaderLabels([
+            "Name",
+            "ID",
+            "Age",
+            "Birth Date",
+            "Sex",
+            "Image Type",
+            "Modality",
+            "Manufacturer",
+            "KVP",
+            "Study Description",
+            "Series Description",
+            "Spacing (xy/z)"
+        ])
         
         # Add widgets to layout
         overviewLayout.addWidget(self.overviewTree)
-        overviewLayout.addWidget(gridWidget)
         overviewLayout.addStretch(1)
         overviewLayout.addWidget(self.dicomTable)
 
@@ -536,21 +524,28 @@ class Interface(Structure):
         propertyLayout = QVBoxLayout()
 
         # Histogram
-        self.histCanvas = FigureCanvas(Figure(figsize=(2, 2),
-                                              tight_layout=True))
+        self.histCanvas = FigureCanvas(
+            Figure(figsize=(2, 2), tight_layout=True)
+        )
         self.histAxes = self.histCanvas.figure.subplots()
 
-        self.histogramView.initialize(self.canvas.image,
-                                      self.histCanvas,
-                                      self.histAxes)
-        self.histCanvas.mpl_connect('button_press_event', 
-                                            self.mouseHistPress)
-        self.histCanvas.mpl_connect('button_release_event', 
-                                            self.mouseHistRelease)
-        self.histCanvas.mpl_connect('motion_notify_event', 
-                                            self.mouseHistMove)
-        self.histCanvas.mpl_connect('scroll_event', 
-                                            self.wheelHistScroll)
+        self.histogramView.initialize(
+            self.canvas.image,
+            self.histCanvas,
+            self.histAxes
+        )
+        self.histCanvas.mpl_connect(
+            "button_press_event", self.mouseHistPress
+        )
+        self.histCanvas.mpl_connect(
+            "button_release_event", self.mouseHistRelease
+        )
+        self.histCanvas.mpl_connect(
+            "motion_notify_event", self.mouseHistMove
+        )
+        self.histCanvas.mpl_connect(
+            "scroll_event", self.wheelHistScroll
+        )
 
         # Set histogram widget
         histogramGroupBox = QGroupBox()
@@ -588,9 +583,11 @@ class Interface(Structure):
         self.lowerLine.setText("0")
         self.upperLine.setText("255")
         self.meanText.setText(
-            str(np.mean(self.canvas.image).astype(np.uint8)))
+            str(np.mean(self.canvas.image).astype(np.uint8))
+        )
         self.stdText.setText(
-            str(np.std(self.canvas.image).astype(np.uint8)))
+            str(np.std(self.canvas.image).astype(np.uint8))
+        )
         self.gammaText.setText(str(self.canvas.gamma))
         self.percentText.setText("100 %")
         
@@ -647,13 +644,17 @@ class Interface(Structure):
         # Species tree window
         self.labelTree = QTreeWidget()
         self.labelTree.setColumnCount(3)
-        self.labelTree.setHeaderLabels(["Species",
-                                        "Class",
-                                        "BGR"])
+        self.labelTree.setHeaderLabels([
+            "Species",
+            "Class",
+            "BGR"
+        ])
         self.labelTree.itemChanged.connect(
-                                    self.turnOnUpdateSpecies)
+            self.turnOnUpdateSpecies
+        )
         self.labelTree.itemSelectionChanged.connect(
-                                    self.turnOnUpdateSpecies)
+            self.turnOnUpdateSpecies
+        )
 
         # Set default species
         foregroundTreeItem = QTreeWidgetItem(self.labelTree)
@@ -674,10 +675,15 @@ class Interface(Structure):
         removeSpeciesButton = QPushButton("Remove Species")
         removeSpeciesButton.clicked.connect(self.turnOnRemoveSpecies)
 
+        # Algorithmic Segmentation
+        segmentationButton = QPushButton("Do Segmentation")
+        segmentationButton.clicked.connect(self.turnOnSegmentation)
+
         # Set layers
         gridLayout.addWidget(self.labelTree, 0, 0, 1, 2)
         gridLayout.addWidget(addSpeciesButton, 1, 0, 1, 1)
         gridLayout.addWidget(removeSpeciesButton, 1, 1, 1, 1)
+        gridLayout.addWidget(segmentationButton, 2, 0, 1, 2)
         gridWidget.setLayout(gridLayout)
 
         # Labeling label
@@ -736,14 +742,17 @@ class Interface(Structure):
 
         # IPython console
         self.ipyConsole = QIPythonWidget(
-                        customBanner="Welcome to the WATERMELON")
+            customBanner="Welcome to the WATERMELON"
+        )
         self.ipyConsole.setMinimumHeight(192)
 
         # Set initial import
         self.ipyConsole.executeCommand(
-                            "from interpreter.interpreter import *")
+            "from interpreter.interpreter import *"
+        )
         self.ipyConsole.executeCommand(
-                            "%matplotlib inline")
+            "%matplotlib inline"
+        )
 
         # Add widgets to layout
         pythonConsoleFrameLayout.addWidget(self.ipyConsole)

@@ -5,11 +5,39 @@ from    PyQt5.QtCore            import  *
 from    PyQt5.QtGui             import  * 
 from    PyQt5.QtWidgets         import  *
 
+from    utils.markovRandomField         import  markovRandomField
 
 
 class SegmentationAction(object):
     def __init__(self):
         super().__init__()
+
+    def turnOnSegmentation(self):
+        ''' Turn on segmentation function
+        '''
+        # Get forground and background maps
+        foreground = 1.*(self.canvas.seed == 1)
+        background = 1.*(self.canvas.seed == 2)
+
+        # Run segmentation
+        result = markovRandomField(
+            self.canvas.image[self.canvas.axialIndex, ..., 0], 
+            self.canvas.seed[self.canvas.axialIndex]
+        )
+        self.canvas.label[self.canvas.axialIndex] = result[0]
+        self.canvas.segmentOverlay[self.canvas.axialIndex] = result[1]
+
+        # Display segmentation result
+        segmentQPixmap = self.canvas.getQPixmap(
+                                    self.canvas.getImageWithSegment())
+        self.segmentQLabel.setPixmap(segmentQPixmap)
+
+        # Surface Rendering
+        x = np.repeat(np.uint8(self.canvas.label == 1), repeats=32, axis=0)
+        self.isoSurface.run(x, self.renderer)
+        self.renderer.ResetCamera()
+        self.interactor.Initialize()
+        self.interactor.Start()
 
 
 class LabelingAction(SegmentationAction):
