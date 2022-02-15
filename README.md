@@ -1,4 +1,4 @@
-# Algorithmic Methods of Model-Based Medical Image Segmentation Using Python
+# Model-Based Algorithms for Medical Image Segmentation Using Python
 ![Python](https://img.shields.io/pypi/pyversions/tensorflow.svg?style=plastic)
 
 ## Introduction
